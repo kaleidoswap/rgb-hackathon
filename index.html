@@ -479,33 +479,49 @@ npm i @kaleidorg/mind @qvac/sdk       <span class="c"># or add it to your app</s
 
   <section id="example" aria-labelledby="start-h">
     <div class="sec-head"><h2 id="start-h">Example: an RGB agent end to end</h2><a class="doc" href="https://docs.kaleidoswap.com/ai-tools/build-local-rgb-agent" target="_blank" rel="noopener">15-minute tutorial ↗</a></div>
-    <p class="sub">Putting the pieces together: a node, test funds, kaleido-mcp, and a local model. Open the steps you need. No Docker? Jump to step 4 and use the mock node.</p>
+    <p class="sub">Putting the pieces together: a node, test funds, kaleido-mcp, and a local model. Open the steps you need. No Docker? Jump to step 5 and use the mock node.</p>
     <div class="steps">
 
       <details class="step">
         <summary><span class="num">1</span><span class="sum-text"><h3>Get a node</h3><span>The kaleido CLI, or the desktop wallet.</span></span><span class="chev" aria-hidden="true">›</span></summary>
         <div class="step-body">
-          <p>Run an <a href="#libraries">RGB Lightning Node</a> with the kaleido CLI (needs Docker), or use <a href="#w-desktop">KaleidoSwap Desktop</a>, which runs one for you.</p>
+          <p>Run an <a href="#libraries">RGB Lightning Node</a> with the kaleido CLI (needs Docker and Python 3.11+), or use <a href="#w-desktop">KaleidoSwap Desktop</a>, which runs one for you.</p>
           <div class="code"><pre>curl -fsSL https://raw.githubusercontent.com/kaleidoswap/kaleido-cli/master/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"   <span class="c"># if kaleido is not found</span>
 kaleido setup                      <span class="c"># create + start one node</span>
+kaleido node init                  <span class="c"># once: set a password, write down the mnemonic</span>
+kaleido node unlock                <span class="c"># after every restart</span>
 kaleido wallet balance             <span class="c"># check it answers</span></pre><button class="copy" type="button">Copy</button></div>
+          <p>The node API is on <code class="i">http://localhost:3001</code>. If that port is taken, <code class="i">kaleido setup</code> picks the next free one: <code class="i">kaleido node list</code> shows it; use it as <code class="i">RLN_NODE_URL</code> below.</p>
         </div>
       </details>
 
       <details class="step">
-        <summary><span class="num">2</span><span class="sum-text"><h3>Fund it</h3><span>BTC, colorable UTXOs, RGB assets, a channel.</span></span><span class="chev" aria-hidden="true">›</span></summary>
+        <summary><span class="num">2</span><span class="sum-text"><h3>Fund it</h3><span>BTC, colorable UTXOs, RGB assets.</span></span><span class="chev" aria-hidden="true">›</span></summary>
         <div class="step-body">
           <ul>
-            <li><strong>BTC</strong> from the <a href="https://faucet.mutinynet.com" target="_blank" rel="noopener">Mutinynet faucet</a>.</li>
-            <li><strong>Colorable UTXOs</strong> before receiving or issuing RGB (<code class="i">rln_create_utxos</code>, or ask the agent).</li>
-            <li><strong>USDT and XAUT</strong> from the <a href="https://faucet.mutinynet.kaleidoswap.com" target="_blank" rel="noopener">RGB faucet</a>.</li>
-            <li><strong>A channel</strong> from the <a href="#network">RGB Lightning maker</a>, to pay and receive invoices.</li>
+            <li><strong>BTC</strong> from the <a href="https://faucet.mutinynet.com" target="_blank" rel="noopener">Mutinynet faucet</a> (sign in with GitHub, or pay a small Lightning invoice) to the address from <code class="i">kaleido wallet address</code>.</li>
+            <li><strong>Colorable UTXOs</strong> before receiving or issuing RGB: <code class="i">kaleido wallet create-utxos</code> (or <code class="i">rln_create_utxos</code>, or ask the agent).</li>
+            <li><strong>USDT and XAUT</strong> from the <a href="https://faucet.mutinynet.kaleidoswap.com" target="_blank" rel="noopener">RGB faucet</a> (sign in with GitHub): use its <em>RGB on-chain</em> tab with an invoice from <code class="i">kaleido asset invoice &lt;asset id&gt;</code>, taking the asset id from the faucet page. 100 USDT or 0.1 XAUT per claim, 5 claims a day. Its Lightning tab only works once you have a channel (step 3).</li>
           </ul>
         </div>
       </details>
 
       <details class="step">
-        <summary><span class="num">3</span><span class="sum-text"><h3>Connect an AI with kaleido-mcp</h3><span>Claude Code, Claude Desktop or Cursor.</span></span><span class="chev" aria-hidden="true">›</span></summary>
+        <summary><span class="num">3</span><span class="sum-text"><h3>Buy a channel</h3><span>Needed before any swap or Lightning payment.</span></span><span class="chev" aria-hidden="true">›</span></summary>
+        <div class="step-body">
+          <p>Swaps settle over Lightning, so your node needs a channel with the KaleidoSwap LSP. Buy one after funding: the LSP opens it to you, optionally with USDT or XAUT on its side, and you pay a fee on-chain.</p>
+          <ul>
+            <li><strong>Size:</strong> 50k to 1M sat, with up to 1,000 USDT or XAUT per channel. A 200k-sat channel costs about 3,400 sat in fees.</li>
+            <li><strong>With an agent:</strong> ask <em>"Buy a channel from the KaleidoSwap LSP preloaded with 10 USDT"</em>. It runs <code class="i">kaleidoswap_lsp_get_info</code>, <code class="i">kaleidoswap_lsp_quote_asset_channel</code>, then <code class="i">kaleidoswap_lsp_create_asset_channel</code>. Then pay the fee to the address the order returns.</li>
+            <li><strong>In KaleidoSwap Desktop:</strong> Channels → Order New Channel.</li>
+            <li><strong>Swap limits per trade:</strong> 0.000001 to 0.01 BTC, 0.5 to 1,000 USDT or XAUT. Allow a few blocks for the channel to open before you swap.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary><span class="num">4</span><span class="sum-text"><h3>Connect an AI with kaleido-mcp</h3><span>Claude Code, Claude Desktop or Cursor.</span></span><span class="chev" aria-hidden="true">›</span></summary>
         <div class="step-body">
           <p><strong>MCP</strong> is the standard way an AI app discovers and calls tools. You register kaleido-mcp once; the AI app starts it for you and you just chat.</p>
           <div class="opt">
@@ -530,13 +546,15 @@ kaleido wallet balance             <span class="c"># check it answers</span></pr
       </details>
 
       <details class="step">
-        <summary><span class="num">4</span><span class="sum-text"><h3>Go local with KaleidoMind</h3><span>Same agent, model on your machine.</span></span><span class="chev" aria-hidden="true">›</span></summary>
+        <summary><span class="num">5</span><span class="sum-text"><h3>Go local with KaleidoMind</h3><span>Same agent, model on your machine.</span></span><span class="chev" aria-hidden="true">›</span></summary>
         <div class="step-body">
           <p>The <code class="i">rgb-agent</code> example runs a QVAC model, connects it to kaleido-mcp, loads the RGB node skill and asks three questions: balances, a 10 USDT invoice, then a 5 USDT send (only with <code class="i">RECIPIENT_INVOICE</code> set). Edit <code class="i">steps</code> in <code class="i">src/index.ts</code> to ask your own.</p>
           <div class="code"><pre>npm create @kaleidorg/mind my-agent
 cd my-agent && npm install
-npm run start:mock  <span class="c"># fake node, Qwen3.5 2B on-device (~1.3 GB, downloaded once)</span>
-npm start           <span class="c"># your node via kaleido-mcp</span></pre><button class="copy" type="button">Copy</button></div>
+npm run start:offline  <span class="c"># fake node + scripted model: checks the setup, no download</span>
+npm run start:mock     <span class="c"># fake node, Qwen3.5 2B on-device (~1.3 GB, downloaded once)</span>
+npm run eval:mock      <span class="c"># 6 wallet tasks against the fake node</span>
+RLN_NODE_URL=http://localhost:3001 npm start   <span class="c"># your node via kaleido-mcp</span></pre><button class="copy" type="button">Copy</button></div>
           <div class="code"><pre><span class="u">&gt; Which RGB assets do I hold, and what are the balances?</span>
   <span class="c">tool rln_list_assets {}</span>
 You hold 1,000 USDT and 2 XAUT.
@@ -552,7 +570,7 @@ Here is your invoice: rgb:~/~/~/sig/…/10/utxob:…
       </details>
 
       <details class="step">
-        <summary><span class="num">5</span><span class="sum-text"><h3>Talk to it</h3><span>Example requests and what comes back.</span></span><span class="chev" aria-hidden="true">›</span></summary>
+        <summary><span class="num">6</span><span class="sum-text"><h3>Talk to it</h3><span>Example requests and what comes back.</span></span><span class="chev" aria-hidden="true">›</span></summary>
         <div class="step-body">
           <p>Same in an MCP client, the KaleidoMind example, or the AI chat in our wallets. Short, specific requests work best.</p>
           <div class="talk">
@@ -579,7 +597,7 @@ Here is your invoice: rgb:~/~/~/sig/…/10/utxob:…
       </ul>
       <div class="note">
         <strong>An experiment, not a benchmark</strong>
-        <p>These are notes from our own tests, not guarantees. Results change with hardware, prompts and model versions: measure on your setup. The <code class="i">rgb-agent</code> example loads a Qwen3 model by default; change <code class="i">modelSrc</code> to try others.</p>
+        <p>These are notes from our own tests, not guarantees. Results change with hardware, prompts and model versions: measure on your setup. The starter loads Qwen3.5 2B by default; set <code class="i">MODEL</code> to another <code class="i">@qvac/sdk</code> model constant (e.g. <code class="i">QWEN3_5_4B_MULTIMODAL_Q4_K_M</code>) to try others.</p>
       </div>
     </div>
   </section>

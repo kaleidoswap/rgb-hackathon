@@ -410,14 +410,14 @@ kaleido setup              <span class="c"># create + start a node on Mutinynet<
     <p class="sub">Turn a wallet into something you can talk to. kaleido-mcp gives a model the tools; KaleidoMind runs the model on your device.</p>
     <div class="tools">
       <article class="tool lead">
-        <div class="tool-head"><h3>kaleido-mcp</h3><span class="ver">npm · 0.4.0</span></div>
+        <div class="tool-head"><h3>kaleido-mcp</h3><span class="ver">npm · 0.4.1</span></div>
         <p>An MCP server: exposes your RGB Lightning Node and the KaleidoSwap DEX as ~90 tools any AI app can call (balances, invoices, sends, issuance, channels, quotes, swaps, submarine swaps).</p>
         <p class="use"><b>Use it for</b> plugging a node into Claude, Cursor or your own agent.</p>
         <div class="code"><pre>npx -y kaleido-mcp</pre><button class="copy" type="button">Copy</button></div>
         <div class="links"><a href="https://github.com/kaleidoswap/kaleido-mcp" target="_blank" rel="noopener">GitHub</a><a href="https://github.com/kaleidoswap/kaleido-mcp/blob/main/docs/TOOLS.md" target="_blank" rel="noopener">Tools</a><a href="https://docs.kaleidoswap.com/ai-tools/mcp-servers" target="_blank" rel="noopener">Docs</a></div>
       </article>
       <article class="tool lead">
-        <div class="tool-head"><h3>@kaleidorg/mind</h3><span class="ver">npm · 0.9.0</span></div>
+        <div class="tool-head"><h3>@kaleidorg/mind</h3><span class="ver">npm · 0.10.2</span></div>
         <p>KaleidoMind, the agent engine in our wallets. Runs QVAC models on-device (Node, Bare, React Native), uses MCP tools and skills, and pauses before every spend.</p>
         <p class="use"><b>Use it for</b> a fully local agent: chat, voice, or autonomous.</p>
         <div class="code"><pre>npm create @kaleidorg/mind my-agent   <span class="c"># starter project</span>
@@ -425,7 +425,7 @@ npm i @kaleidorg/mind @qvac/sdk       <span class="c"># or add it to your app</s
         <div class="links"><a href="https://github.com/kaleidoswap/kaleido-mind" target="_blank" rel="noopener">GitHub</a><a href="https://github.com/kaleidoswap/kaleido-mind/tree/main/examples" target="_blank" rel="noopener">Examples</a><a href="https://docs.kaleidoswap.com/ai-tools/kaleido-mind" target="_blank" rel="noopener">Docs</a></div>
       </article>
       <article class="tool">
-        <div class="tool-head"><h3>Claude Code plugin</h3><span class="ver">15 skills</span></div>
+        <div class="tool-head"><h3>Claude Code plugin</h3><span class="ver">12 skills</span></div>
         <p>Installs the KaleidoMind skills (RGB node, trading, channels, DCA, paid data…) and starts kaleido-mcp. Fastest way to poke at a node from your editor.</p>
         <div class="code"><pre>/plugin marketplace add kaleidoswap/kaleido-mind
 /plugin install kaleido-mind@kaleidoswap</pre><button class="copy" type="button">Copy</button></div>

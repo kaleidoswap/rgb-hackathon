@@ -4,19 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>RGB Agent Hacker Kit · KaleidoSwap</title>
-<meta name="description" content="Everything you need to build local AI agents that hold and move RGB assets: wallets, kaleido-mcp, KaleidoMind on QVAC, SDKs, and the KaleidoSwap makers and faucets on Mutinynet.">
+<meta name="description" content="Everything you need to build on RGB with KaleidoSwap: wallets, rgb-lib and the RGB Lightning Node, AI libraries for local agents, and live makers and faucets on Mutinynet.">
 <meta property="og:title" content="RGB Agent Hacker Kit">
-<meta property="og:description" content="Everything you need to build local AI agents that hold and move RGB assets: wallets, kaleido-mcp, KaleidoMind on QVAC, SDKs, and the KaleidoSwap makers and faucets on Mutinynet.">
+<meta property="og:description" content="Everything you need to build on RGB with KaleidoSwap: wallets, rgb-lib and the RGB Lightning Node, AI libraries for local agents, and live makers and faucets on Mutinynet.">
 <meta property="og:url" content="https://kaleidoswap.github.io/rgb-hackathon/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#0D1813">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230D1813'/%3E%3Cpath d='M4 4 L14 4 L4 14 Z' fill='%2315E99A'/%3E%3Cpath d='M28 28 L18 28 L28 18 Z' fill='%2315E99A'/%3E%3Cpath d='M10 16 L16 10 L22 16 L16 22 Z' fill='%2315E99A'/%3E%3Cpath d='M5 27 L27 5' stroke='%236F32FF' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="img/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: single-column field guide on the KaleidoSwap terminal-dark ground. Order: how the pieces fit, the quick start (collapsed steps), wallets, networks, toolbox, models, good to know. Deliberately single-theme (brand is dark-only). */
+/* Layout: single-column field guide on the KaleidoSwap terminal-dark ground. Order: summary, wallets, RGB libraries, AI libraries, network, an end-to-end agent example, models, good to know. Deliberately single-theme (brand is dark-only). */
 :root {
   --bg: #0D1813;
   --card: #111110;
@@ -47,8 +47,8 @@ img { max-width: 100%; height: auto; display: block; }
 .wrap { max-width: 980px; margin-inline: auto; }
 
 .top { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding-block: 20px; border-bottom: 1px solid var(--line-soft); }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -0.01em; }
-.brand svg { width: 28px; height: 28px; flex: none; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -0.01em; color: var(--fg); text-decoration: none; }
+.brand img { width: 28px; height: 28px; flex: none; }
 .net { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--green); border: 1px solid rgba(21,233,154,0.35); border-radius: 9999px; padding: 4px 12px; }
 .net::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
 
@@ -65,78 +65,47 @@ h1 .g { background: var(--grad); -webkit-background-clip: text; background-clip:
 .btn.secondary:hover { border-color: var(--muted); }
 
 section { padding-block: 44px; border-top: 1px solid var(--line-soft); }
-h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 6px; text-wrap: balance; }
+.sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; margin-bottom: 6px; }
+h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+.doc { font-size: 0.85rem; white-space: nowrap; }
 .sub { color: var(--muted); margin: 0 0 24px; max-width: 65ch; }
 h3 { font-size: 1.125rem; font-weight: 500; margin: 0; letter-spacing: -0.005em; }
 h4 { margin: 0 0 8px; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--violet-soft); font-weight: 500; }
 
-/* How it fits */
-.flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; }
-.flow-item { position: relative; background: var(--card); border: 1px solid var(--line-soft); border-radius: 12px; padding: 16px; display: grid; gap: 6px; align-content: start; margin-right: 22px; }
-.flow-item:last-child { margin-right: 0; }
-.flow-item:not(:last-child)::after { content: "→"; position: absolute; right: -19px; top: 50%; transform: translateY(-50%); color: var(--green); font-family: var(--font-mono); }
-.flow-item .role { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--green); }
-.flow-item strong { font-weight: 700; }
-.flow-item p { margin: 0; color: var(--muted); font-size: 0.88rem; }
-@media (max-width: 760px) {
-  .flow { grid-template-columns: minmax(0,1fr); gap: 22px; }
-  .flow-item { margin-right: 0; }
-  .flow-item:not(:last-child)::after { content: "↓"; right: auto; left: 22px; top: auto; bottom: -21px; transform: none; }
-}
-.paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; margin-top: 20px; }
-.path { border: 1px solid var(--line-soft); border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; }
-.path p { margin: 0; color: var(--muted); font-size: 0.93rem; }
-
-/* Steps as expandable rows */
-.steps { display: grid; gap: 10px; }
-details.step { background: var(--card); border: 1px solid var(--line-soft); border-radius: 12px; }
-details.step[open] { border-color: rgba(21,233,154,0.3); }
-details.step > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 36px minmax(0,1fr) auto; gap: 14px; align-items: center; padding: 14px 16px; }
-details.step > summary::-webkit-details-marker { display: none; }
-.num { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-mono); font-weight: 500; font-size: 0.9rem; color: var(--green); border: 1.5px solid rgba(21,233,154,0.5); }
-.sum-text { display: grid; gap: 2px; min-width: 0; }
-.sum-text span { color: var(--muted); font-size: 0.9rem; }
-.chev { color: var(--muted); font-family: var(--font-mono); transition: transform .15s; }
-details[open] > summary .chev { transform: rotate(90deg); color: var(--green); }
-.step-body { padding: 0 16px 18px 66px; display: grid; gap: 12px; min-width: 0; }
-.step-body p { margin: 0; color: var(--muted); }
-.step-body p strong, .step-body li strong { color: var(--fg); font-weight: 500; }
-.step-body ul { margin: 0; padding-left: 18px; color: var(--muted); display: grid; gap: 4px; }
-@media (max-width: 560px) { .step-body { padding-left: 16px; } details.step > summary { gap: 10px; } }
-.mini-tabs { display: grid; gap: 10px; }
-.opt { border-left: 2px solid var(--violet); padding-left: 12px; display: grid; gap: 8px; }
-.opt h5 { margin: 0; font-size: 0.9rem; font-weight: 500; }
-
-.code { position: relative; background: var(--code-bg); border: 1px solid var(--line-soft); border-radius: 8px; min-width: 0; }
-.code pre { margin: 0; padding: 14px 52px 14px 16px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.6; color: var(--code-fg); white-space: pre; }
-.code .c { color: var(--muted); }
-.code .u { color: var(--violet-soft); }
-.code .t { color: var(--amber); }
-.copy { position: absolute; top: 8px; right: 8px; font: 500 0.7rem var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; background: var(--card); color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; cursor: pointer; }
-.copy:hover { color: var(--fg); border-color: var(--muted); }
-.copy.done { color: var(--green); border-color: rgba(21,233,154,0.5); }
-code.i { font-family: var(--font-mono); font-size: 0.85em; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; color: var(--code-fg); overflow-wrap: anywhere; }
-
-/* Talk to it */
-.talk { display: grid; gap: 10px; }
-.turn { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; border: 1px solid var(--line-soft); border-radius: 10px; overflow: hidden; }
-.turn .ask { padding: 12px 14px; background: var(--code-bg); border-left: 2px solid var(--violet); font-family: var(--font-mono); font-size: 0.82rem; color: var(--code-fg); }
-.turn .ans { padding: 12px 14px; font-size: 0.88rem; color: var(--muted); }
-.turn .call { display: block; margin-bottom: 4px; font-family: var(--font-mono); font-size: 0.72rem; color: var(--green); }
-.turn .ans .gate { color: var(--amber); }
-@media (max-width: 640px) { .turn { grid-template-columns: minmax(0,1fr); } }
+/* Summary */
+.layers { display: grid; gap: 10px; }
+.layer { display: grid; grid-template-columns: 140px minmax(0,1fr) auto; gap: 16px; align-items: center; background: var(--card); border: 1px solid var(--line-soft); border-radius: 12px; padding: 14px 18px; text-decoration: none; color: inherit; transition: border-color .15s; }
+.layer:hover { border-color: rgba(21,233,154,0.4); color: inherit; }
+.layer .lk { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--green); }
+.layer strong { font-weight: 500; display: block; }
+.layer span.d { color: var(--muted); font-size: 0.92rem; }
+.layer .go { color: var(--muted); font-family: var(--font-mono); }
+@media (max-width: 600px) { .layer { grid-template-columns: minmax(0,1fr) auto; } .layer .lk { grid-column: 1 / -1; } }
+.can { margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 10px; }
+.can div { border: 1px solid var(--line-soft); border-radius: 10px; padding: 12px 14px; display: grid; gap: 2px; }
+.can strong { font-weight: 500; font-size: 0.95rem; }
+.can span { color: var(--muted); font-size: 0.85rem; }
 
 /* Wallets */
+.overview { overflow-x: auto; border: 1px solid var(--line-soft); border-radius: 10px; margin-bottom: 20px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 560px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
+th { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--card); }
+tr:last-child td { border-bottom: 0; }
+td.m { color: var(--muted); }
+@media (max-width: 640px) { table { min-width: 0; } .hide-s { display: none; } th, td { padding: 10px; } }
 .wallets { display: grid; gap: 20px; }
 .wallet { background: var(--card); border: 1px solid var(--line-soft); border-radius: 14px; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
 .wallet .shot { background: #0A0F0C; border-right: 1px solid var(--line-soft); display: grid; place-items: center; padding: 18px; min-width: 0; }
 .wallet .shot img { border-radius: 8px; border: 1px solid var(--line-soft); }
-.wallet .shot.empty { color: var(--muted); font-size: 0.85rem; text-align: center; padding: 28px; }
+.wallet .shot.phones { grid-template-columns: repeat(2, minmax(0, 220px)); justify-content: center; gap: 14px; }
+.wallet .shot.phones img { border-radius: 18px; }
+.wallet .shot img.tall { max-width: 300px; border-radius: 14px; }
 .wallet .info { padding: 22px; display: grid; gap: 14px; align-content: start; min-width: 0; }
 .wallet-head { display: grid; gap: 6px; }
 .wallet-head h3 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.01em; }
 .wallet-meta { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); }
-.status { justify-self: start; display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 500; padding: 3px 10px; border-radius: 9999px; }
+.status { justify-self: start; display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 500; padding: 3px 10px; border-radius: 9999px; white-space: nowrap; }
 .status.open { color: var(--green); background: rgba(21,233,154,0.1); border: 1px solid rgba(21,233,154,0.3); }
 .status.beta { color: var(--amber); background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); }
 .wallet .tagline { margin: 0; color: var(--fg); }
@@ -152,30 +121,9 @@ code.i { font-family: var(--font-mono); font-size: 0.85em; background: rgba(255,
 
 .links { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.875rem; }
 
-/* Networks */
-.netcard { background: var(--card); border: 1px solid rgba(21,233,154,0.3); border-radius: 14px; padding: 22px; display: grid; gap: 20px; }
-.netcard-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
-.netcard-head h3 { font-size: 1.3rem; font-weight: 700; }
-.services { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
-.service { border: 1px solid var(--line-soft); border-radius: 12px; padding: 16px 18px; display: grid; gap: 10px; align-content: start; min-width: 0; }
-.service .host { font-family: var(--font-mono); font-size: 0.8rem; color: var(--code-fg); overflow-wrap: anywhere; }
-.service p { margin: 0; color: var(--muted); font-size: 0.92rem; }
-.service ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 0.92rem; display: grid; gap: 3px; }
-.utils { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 10px; }
-.util { border: 1px solid var(--line-soft); border-radius: 10px; padding: 12px 14px; display: grid; gap: 2px; min-width: 0; }
-.util span { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
-.util a, .util code { font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; }
-.util code { color: var(--code-fg); }
-.why { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 12px; }
-.why div { display: grid; gap: 2px; }
-.why strong { font-weight: 500; }
-.why p { margin: 0; color: var(--muted); font-size: 0.9rem; }
-.other { margin-top: 16px; border: 1px dashed var(--line); border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; }
-.other p { margin: 0; color: var(--muted); font-size: 0.93rem; }
-
-/* Toolbox */
+/* Libraries */
 .group + .group { margin-top: 28px; }
-.group-title { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+.group-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-bottom: 12px; }
 .group-title h3 { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--violet-soft); font-weight: 500; }
 .group-title span { color: var(--muted); font-size: 0.88rem; }
 .tools { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 16px; }
@@ -184,12 +132,75 @@ code.i { font-family: var(--font-mono); font-size: 0.85em; background: rgba(255,
 .tool-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
 .ver { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
 .tool p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+.tool .use { color: var(--fg); font-size: 0.88rem; }
+.tool .use b { color: var(--green); font-weight: 500; }
 
-/* Models */
+.code { position: relative; background: var(--code-bg); border: 1px solid var(--line-soft); border-radius: 8px; min-width: 0; }
+.code pre { margin: 0; padding: 14px 52px 14px 16px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.6; color: var(--code-fg); white-space: pre; }
+.code .c { color: var(--muted); }
+.code .u { color: var(--violet-soft); }
+.code .t { color: var(--amber); }
+.copy { position: absolute; top: 8px; right: 8px; font: 500 0.7rem var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; background: var(--card); color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; cursor: pointer; }
+.copy:hover { color: var(--fg); border-color: var(--muted); }
+.copy.done { color: var(--green); border-color: rgba(21,233,154,0.5); }
+code.i { font-family: var(--font-mono); font-size: 0.85em; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; color: var(--code-fg); overflow-wrap: anywhere; }
+
+/* Network */
+.netcard { background: var(--card); border: 1px solid rgba(21,233,154,0.3); border-radius: 14px; padding: 22px; display: grid; gap: 20px; }
+.netcard-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.netcard-head h3 { font-size: 1.3rem; font-weight: 700; }
+.assets { display: flex; gap: 6px; margin-left: auto; }
+.assets img { width: 26px; height: 26px; object-fit: contain; }
+.ico { width: 20px; height: 20px; object-fit: contain; flex: none; }
+.services { display: grid; gap: 10px; }
+.service { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 6px 20px; border: 1px solid var(--line-soft); border-radius: 12px; padding: 14px 18px; }
+.service .name { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.service .host { font-family: var(--font-mono); font-size: 0.8rem; color: var(--code-fg); overflow-wrap: anywhere; }
+.service p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+.service .icons { display: inline-flex; gap: 4px; }
+@media (max-width: 640px) { .service { grid-template-columns: minmax(0,1fr); } }
+.utils { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 10px; }
+.util { border: 1px solid var(--line-soft); border-radius: 10px; padding: 12px 14px; display: grid; gap: 4px; min-width: 0; }
+.util .lbl { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.util .lbl img { width: 16px; height: 16px; }
+.util a, .util code { font-family: var(--font-mono); font-size: 0.78rem; overflow-wrap: anywhere; }
+.util code { color: var(--code-fg); }
+.util small { color: var(--muted); font-size: 0.78rem; }
+.why { display: flex; flex-wrap: wrap; gap: 8px; }
+.why span { font-size: 0.85rem; padding: 4px 12px; border-radius: 9999px; background: rgba(21,233,154,0.08); color: var(--code-fg); }
+.why span b { color: var(--green); font-weight: 500; }
+.other { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+/* Example steps */
+.steps { display: grid; gap: 10px; }
+details.step { background: var(--card); border: 1px solid var(--line-soft); border-radius: 12px; }
+details.step[open] { border-color: rgba(21,233,154,0.3); }
+details.step > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 36px minmax(0,1fr) auto; gap: 14px; align-items: center; padding: 14px 16px; }
+details.step > summary::-webkit-details-marker { display: none; }
+.num { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-mono); font-weight: 500; font-size: 0.9rem; color: var(--green); border: 1.5px solid rgba(21,233,154,0.5); }
+.sum-text { display: grid; gap: 2px; min-width: 0; }
+.sum-text span { color: var(--muted); font-size: 0.9rem; }
+.chev { color: var(--muted); font-family: var(--font-mono); transition: transform .15s; }
+details[open] > summary .chev { transform: rotate(90deg); color: var(--green); }
+.step-body { padding: 0 16px 18px 66px; display: grid; gap: 12px; min-width: 0; }
+.step-body p { margin: 0; color: var(--muted); }
+.step-body p strong, .step-body li strong { color: var(--fg); font-weight: 500; }
+.step-body ul { margin: 0; padding-left: 18px; color: var(--muted); display: grid; gap: 4px; }
+@media (max-width: 560px) { .step-body { padding-left: 16px; } details.step > summary { gap: 10px; } }
+.opt { border-left: 2px solid var(--violet); padding-left: 12px; display: grid; gap: 8px; }
+.opt h5 { margin: 0; font-size: 0.9rem; font-weight: 500; }
+.talk { display: grid; gap: 10px; }
+.turn { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border: 1px solid var(--line-soft); border-radius: 10px; overflow: hidden; }
+.turn .ask { padding: 12px 14px; background: var(--code-bg); border-left: 2px solid var(--violet); font-family: var(--font-mono); font-size: 0.82rem; color: var(--code-fg); }
+.turn .ans { padding: 12px 14px; font-size: 0.88rem; color: var(--muted); }
+.turn .call { display: block; margin-bottom: 4px; font-family: var(--font-mono); font-size: 0.72rem; color: var(--green); }
+.turn .ans .gate { color: var(--amber); }
+@media (max-width: 640px) { .turn { grid-template-columns: minmax(0,1fr); } }
+
+/* Models + rules */
 .models-sum { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; align-items: start; }
 .models-sum ul { margin: 0; padding-left: 18px; color: var(--muted); display: grid; gap: 6px; }
 .models-sum ul strong { color: var(--fg); font-weight: 500; }
-
 .note { display: grid; gap: 6px; padding: 16px 18px; border-radius: 10px; background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.3); }
 .note strong { color: var(--amber); font-weight: 500; }
 .note p { margin: 0; color: var(--muted); font-size: 0.93rem; }
@@ -200,7 +211,9 @@ code.i { font-family: var(--font-mono); font-size: 0.85em; background: rgba(255,
 .rules li::before { content: ""; width: 8px; height: 8px; margin-top: 9px; border-radius: 2px; background: var(--green); transform: rotate(45deg); }
 .rules strong { color: var(--fg); font-weight: 500; }
 
-footer { padding-block: 32px 0; border-top: 1px solid var(--line-soft); color: var(--muted); font-size: 0.85rem; display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+footer { padding-block: 32px 0; border-top: 1px solid var(--line-soft); color: var(--muted); font-size: 0.85rem; display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; align-items: center; }
+footer .brand { font-size: 0.95rem; }
+footer .brand img { width: 22px; height: 22px; }
 @media (max-width: 520px) { .hero { padding-block: 36px 28px; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -208,148 +221,58 @@ footer { padding-block: 32px 0; border-top: 1px solid var(--line-soft); color: v
 <body>
 <div class="wrap">
   <header class="top">
-    <div class="brand">
-      <svg viewBox="0 0 32 32" aria-hidden="true">
-        <path d="M4 4 L14 4 L4 14 Z" fill="#15E99A"/>
-        <path d="M28 28 L18 28 L28 18 Z" fill="#15E99A"/>
-        <path d="M10 16 L16 10 L22 16 L16 22 Z" fill="#15E99A"/>
-        <path d="M5 27 L27 5" stroke="#6F32FF" stroke-width="2.4" stroke-linecap="round"/>
-      </svg>
-      KaleidoSwap
-    </div>
+    <a class="brand" href="https://kaleidoswap.com" target="_blank" rel="noopener"><img src="img/logo.svg" alt="" width="28" height="28">KaleidoSwap</a>
     <span class="net">Mutinynet · test funds only</span>
   </header>
 
   <div class="hero">
     <div class="eyebrow">QVAC × RGB Hackathon · Builder kit</div>
-    <h1>Build local AI agents that <span class="g">hold and move RGB assets</span></h1>
-    <p class="lede">Three wallets, an MCP server, a local AI engine and live makers and faucets on Mutinynet. Pick a wallet, give an AI access to it, and start asking.</p>
+    <h1>Build on RGB, with <span class="g">AI agents that hold and move assets</span></h1>
+    <p class="lede">Wallets you can use or fork, libraries to build your own, AI libraries for local agents, and live makers and faucets on Mutinynet.</p>
     <div class="cta">
-      <a class="btn primary" href="#start">Quick start</a>
-      <a class="btn secondary" href="#wallets">Wallets</a>
+      <a class="btn primary" href="#wallets">Wallets</a>
+      <a class="btn secondary" href="#libraries">RGB libraries</a>
+      <a class="btn secondary" href="#ai">AI libraries</a>
       <a class="btn secondary" href="#network">Network</a>
-      <a class="btn secondary" href="#toolbox">Toolbox</a>
+      <a class="btn secondary" href="#example">Agent example</a>
     </div>
   </div>
 
-  <section id="how" aria-labelledby="how-h">
-    <h2 id="how-h">How the pieces fit</h2>
-    <p class="sub">An agent needs a brain that decides, tools it can call, and a wallet the tools act on.</p>
-    <div class="flow">
-      <div class="flow-item"><span class="role">Brain</span><strong>An AI model</strong><p>Claude, Cursor or another AI app, or a local Qwen model running through QVAC and KaleidoMind.</p></div>
-      <div class="flow-item"><span class="role">Tools</span><strong>kaleido-mcp</strong><p>Turns your node and the DEX into tools the model can call: balances, invoices, sends, quotes, swaps.</p></div>
-      <div class="flow-item"><span class="role">Wallet</span><strong>RGB Lightning Node</strong><p>Holds your BTC and RGB assets, on-chain and in Lightning channels. Run it with the CLI or the desktop app.</p></div>
-      <div class="flow-item"><span class="role">Market</span><strong>KaleidoSwap makers</strong><p>Sell you channels and swap BTC ↔ USDT/XAUT on Mutinynet.</p></div>
+  <section id="overview" aria-labelledby="overview-h">
+    <div class="sec-head"><h2 id="overview-h">How the pieces fit</h2><a class="doc" href="https://docs.kaleidoswap.com/whats-kaleidoswap/architecture" target="_blank" rel="noopener">Architecture docs ↗</a></div>
+    <p class="sub">Four layers. Use a wallet as-is, build on the libraries, put an AI on top, and test everything on Mutinynet.</p>
+    <div class="layers">
+      <a class="layer" href="#wallets"><span class="lk">Wallets</span><span><strong>Desktop, Rate, browser extension</strong><span class="d">Ready apps that hold BTC and RGB assets. Use them as your node, your demo wallet, or fork them.</span></span><span class="go" aria-hidden="true">↓</span></a>
+      <a class="layer" href="#libraries"><span class="lk">RGB libraries</span><span><strong>rgb-lib, RGB Lightning Node, SDKs</strong><span class="d">Build your own wallet or app: RGB on-chain, RGB over Lightning, swaps.</span></span><span class="go" aria-hidden="true">↓</span></a>
+      <a class="layer" href="#ai"><span class="lk">AI libraries</span><span><strong>kaleido-mcp, KaleidoMind</strong><span class="d">Give a model tools to read balances, issue, pay and swap, running locally with QVAC.</span></span><span class="go" aria-hidden="true">↓</span></a>
+      <a class="layer" href="#network"><span class="lk">Network</span><span><strong>Mutinynet makers, faucets, proxy</strong><span class="d">Free test funds and live counterparties for channels and swaps.</span></span><span class="go" aria-hidden="true">↓</span></a>
     </div>
-    <div class="paths">
-      <div class="path"><h3>Fastest: chat with your node</h3><p>Connect kaleido-mcp to Claude Code or Claude Desktop (step 3) and ask in plain language. Good for exploring what the tools can do.</p></div>
-      <div class="path"><h3>Hackathon goal: fully local</h3><p>Swap the cloud AI for a model on your machine or phone with KaleidoMind on QVAC (step 4). Nothing leaves the device, and every spend waits for your yes.</p></div>
-    </div>
-  </section>
-
-  <section id="start" aria-labelledby="start-h">
-    <h2 id="start-h">From zero to an RGB agent</h2>
-    <p class="sub">Five steps; open the ones you need. No Docker, or short on time? Open step 4 and run the agent against the built-in mock node first.</p>
-    <div class="steps">
-
-      <details class="step">
-        <summary><span class="num">1</span><span class="sum-text"><h3>Run an RGB Lightning Node</h3><span>One command with the kaleido CLI, or use the desktop app.</span></span><span class="chev" aria-hidden="true">›</span></summary>
-        <div class="step-body">
-          <p>The <strong>kaleido</strong> CLI installs, creates and starts a node on Mutinynet with sensible defaults. Requires Docker. Prefer a UI? The <a href="#wallets">desktop app</a> runs a node for you.</p>
-          <div class="code"><pre>curl -fsSL https://raw.githubusercontent.com/kaleidoswap/kaleido-cli/master/install.sh | sh
-kaleido setup                      <span class="c"># create + start one node</span>
-kaleido wallet balance             <span class="c"># check it answers</span></pre><button class="copy" type="button">Copy</button></div>
-        </div>
-      </details>
-
-      <details class="step">
-        <summary><span class="num">2</span><span class="sum-text"><h3>Fund it</h3><span>Test BTC and RGB assets from the faucets.</span></span><span class="chev" aria-hidden="true">›</span></summary>
-        <div class="step-body">
-          <ul>
-            <li><strong>BTC:</strong> send signet coins to your node address from the <a href="https://faucet.mutinynet.com" target="_blank" rel="noopener">Mutinynet faucet</a>.</li>
-            <li><strong>Colorable UTXOs:</strong> create a few before receiving or issuing RGB (<code class="i">rln_create_utxos</code>, or ask the agent).</li>
-            <li><strong>RGB assets:</strong> claim USDT and XAUT from the <a href="https://faucet.mutinynet.kaleidoswap.com" target="_blank" rel="noopener">KaleidoSwap RGB faucet</a> (sign in with GitHub).</li>
-            <li><strong>Lightning:</strong> buy a channel from the <a href="#network">KaleidoSwap maker</a> to pay and receive invoices.</li>
-          </ul>
-        </div>
-      </details>
-
-      <details class="step">
-        <summary><span class="num">3</span><span class="sum-text"><h3>Give an AI access with kaleido-mcp</h3><span>Plug your node into Claude Code, Claude Desktop or Cursor.</span></span><span class="chev" aria-hidden="true">›</span></summary>
-        <div class="step-body">
-          <p><strong>What MCP is:</strong> the Model Context Protocol is the standard way an AI app discovers and calls external tools. <strong>kaleido-mcp</strong> is a small server that the AI app starts for you; it exposes your node and the KaleidoSwap DEX as tools (<code class="i">rln_list_assets</code>, <code class="i">rln_create_rgb_invoice</code>, <code class="i">kaleidoswap_get_quote</code>…). You don't run it yourself: you register it once, then just chat.</p>
-          <div class="mini-tabs">
-            <div class="opt">
-              <h5>Claude Code</h5>
-              <div class="code"><pre>claude mcp add kaleido -e RLN_NODE_URL=http://localhost:3001 -- npx -y kaleido-mcp</pre><button class="copy" type="button">Copy</button></div>
-            </div>
-            <div class="opt">
-              <h5>Claude Desktop, Cursor or any MCP client</h5>
-              <p>Add this to the client's MCP config (Claude Desktop: Settings → Developer → Edit Config), then restart it.</p>
-              <div class="code"><pre>{
-  "mcpServers": {
-    "kaleido": {
-      "command": "npx",
-      "args": ["-y", "kaleido-mcp"],
-      "env": { "RLN_NODE_URL": "http://localhost:3001" }
-    }
-  }
-}</pre><button class="copy" type="button">Copy</button></div>
-            </div>
-          </div>
-          <p><strong>Check it works:</strong> ask <em>"What's my node info?"</em>. The client shows a call to <code class="i">rln_get_node_info</code> and answers with your node's pubkey and channel count. <code class="i">RLN_NODE_URL</code> is wherever your node's API listens; the CLI default is shown. Want ready-made skills too? Install the <a href="#toolbox">Claude Code plugin</a>.</p>
-        </div>
-      </details>
-
-      <details class="step">
-        <summary><span class="num">4</span><span class="sum-text"><h3>Go local with KaleidoMind</h3><span>The same agent, with the model running on your own machine.</span></span><span class="chev" aria-hidden="true">›</span></summary>
-        <div class="step-body">
-          <p><strong>What KaleidoMind does:</strong> <code class="i">@kaleidorg/mind</code> is the agent loop that replaces the cloud AI. It runs a model on-device through QVAC, connects to kaleido-mcp for tools, loads a <em>skill</em> (instructions that teach the model how to use an RGB node), and pauses before any tool that moves funds until you approve it. It is the engine behind the AI chat in our desktop and mobile wallets.</p>
-          <p>The <code class="i">rgb-agent</code> example asks three questions in a row: balances, a 10 USDT invoice, then a 5 USDT send (only if you set <code class="i">RECIPIENT_INVOICE</code>). Change the <code class="i">steps</code> list in <code class="i">src/index.ts</code> to ask your own.</p>
-          <div class="code"><pre>git clone https://github.com/kaleidoswap/kaleido-mind && cd kaleido-mind
-corepack enable && pnpm install && pnpm build
-cd examples/rgb-agent
-pnpm start:mock     <span class="c"># fake node, real local model (downloaded once)</span>
-pnpm start          <span class="c"># your node via kaleido-mcp</span></pre><button class="copy" type="button">Copy</button></div>
-          <p>What you'll see in mock mode:</p>
-          <div class="code"><pre><span class="u">&gt; Which RGB assets do I hold, and what are the balances?</span>
-  <span class="c">tool rln_list_assets {}</span>
-You hold 1,000 USDT and 2 XAUT.
-
-<span class="u">&gt; Create an RGB invoice so I can receive 10 USDT.</span>
-  <span class="c">tool rln_create_rgb_invoice {"asset":"USDT","amount":10}</span>
-Here is your invoice: rgb:~/~/~/sig/…/10/utxob:…
-
-<span class="u">&gt; Send 5 USDT to this RGB invoice: rgb:…</span>
-  <span class="c">tool rln_send_asset {"asset":"USDT","amount":5,"to":"rgb:…"}</span>
-  <span class="t">Send 5 USDT to rgb:…. Confirm? [y/N]</span></pre></div>
-        </div>
-      </details>
-
-      <details class="step">
-        <summary><span class="num">5</span><span class="sum-text"><h3>Talk to it</h3><span>Example requests and what comes back.</span></span><span class="chev" aria-hidden="true">›</span></summary>
-        <div class="step-body">
-          <p>Works the same in an MCP client, the KaleidoMind example, or the AI chat in our wallets. Short, specific requests work best.</p>
-          <div class="talk">
-            <div class="turn"><div class="ask">Which RGB assets do I hold, and what are the balances?</div><div class="ans"><span class="call">rln_list_assets</span>A list like "USDT: 100 spendable, XAUT: 0.5", each with its asset id.</div></div>
-            <div class="turn"><div class="ask">Create 3 colorable UTXOs so I can receive RGB.</div><div class="ans"><span class="call">rln_create_utxos</span><span class="gate">Asks you to confirm (it spends on-chain fees),</span> then reports the UTXOs created.</div></div>
-            <div class="turn"><div class="ask">Issue a token named Hackathon Coin, ticker HCK, supply 1,000,000.</div><div class="ans"><span class="call">rln_issue_asset</span><span class="gate">Asks you to confirm,</span> then returns the new asset id (<code class="i">rgb:…</code>).</div></div>
-            <div class="turn"><div class="ask">Create an RGB invoice to receive 10 HCK.</div><div class="ans"><span class="call">rln_create_rgb_invoice</span>An <code class="i">rgb:…</code> invoice string to share with the payer.</div></div>
-            <div class="turn"><div class="ask">Quote 0.0005 BTC to USDT on KaleidoSwap.</div><div class="ans"><span class="call">kaleidoswap_get_quote</span>The USDT you would receive, the fee and how long the quote is valid.</div></div>
-            <div class="turn"><div class="ask">Pay this Lightning invoice: lntbs…</div><div class="ans"><span class="call">rln_pay_invoice</span><span class="gate">Reads back the invoice and waits for your yes,</span> then reports the payment status.</div></div>
-          </div>
-        </div>
-      </details>
-
+    <div class="can" aria-label="What you can do">
+      <div><strong>Issue RGB assets</strong><span>Your own token in one call</span></div>
+      <div><strong>Send and receive on-chain</strong><span>RGB invoices, any wallet</span></div>
+      <div><strong>Pay over Lightning</strong><span>RGB assets in channels</span></div>
+      <div><strong>Swap BTC ↔ USDT, XAUT</strong><span>Atomic, against our maker</span></div>
+      <div><strong>Buy channels</strong><span>Inbound liquidity on demand</span></div>
+      <div><strong>Run a local agent</strong><span>Chat or voice, confirm before spend</span></div>
     </div>
   </section>
 
   <section id="wallets" aria-labelledby="wallets-h">
-    <h2 id="wallets-h">Our wallets</h2>
-    <p class="sub">Use one as your node, as the user-facing wallet of your demo, or fork it and ship your feature inside a real app.</p>
+    <div class="sec-head"><h2 id="wallets-h">Our wallets</h2><a class="doc" href="https://docs.kaleidoswap.com/desktop-app/getting-started/introduction" target="_blank" rel="noopener">Wallet docs ↗</a></div>
+    <p class="sub">Three KaleidoSwap wallets, each for a different surface. Two are open source and can be forked during the hackathon.</p>
+    <div class="overview">
+      <table>
+        <thead><tr><th>Wallet</th><th class="hide-s">Platform</th><th>Best for</th><th class="hide-s">AI</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><a href="#w-desktop">KaleidoSwap Desktop</a></td><td class="m hide-s">macOS, Windows, Linux</td><td class="m">Running a node, trading, channels</td><td class="m hide-s">Chat</td><td><span class="status open">Open source · v0.5.1</span></td></tr>
+          <tr><td><a href="#w-rate">Rate</a></td><td class="m hide-s">Android, iOS</td><td class="m">Mobile, multi-protocol, voice</td><td class="m hide-s">Chat + voice</td><td><span class="status open">Open source · v0.4.0</span></td></tr>
+          <tr><td><a href="#w-ext">Browser Extension</a></td><td class="m hide-s">Chromium</td><td class="m">Web dApps via window.rgb</td><td class="m hide-s">None</td><td><span class="status beta">Closed beta · v0.3.0</span></td></tr>
+        </tbody>
+      </table>
+    </div>
     <div class="wallets">
 
-      <article class="wallet">
+      <article class="wallet" id="w-desktop">
         <div class="shot"><img src="img/desktop-trade.jpg" alt="KaleidoSwap Desktop trade screen quoting 10,250 sats for 7.14 USDT on the signet maker" width="1400" height="897" loading="lazy"></div>
         <div class="info">
           <div class="wallet-head">
@@ -371,12 +294,12 @@ Here is your invoice: rgb:~/~/~/sig/…/10/utxob:…
 pnpm install
 pnpm run tauri:dev     <span class="c"># needs the Tauri prerequisites</span></pre><button class="copy" type="button">Copy</button></div>
           </details>
-          <div class="links"><a href="https://github.com/kaleidoswap/desktop-app/releases/tag/v0.5.1" target="_blank" rel="noopener">Download</a><a href="https://github.com/kaleidoswap/desktop-app" target="_blank" rel="noopener">GitHub</a><a href="https://docs.kaleidoswap.com/desktop-app/kaleidomind/chat" target="_blank" rel="noopener">Chat docs</a></div>
+          <div class="links"><a href="https://github.com/kaleidoswap/desktop-app/releases/tag/v0.5.1" target="_blank" rel="noopener">Download</a><a href="https://github.com/kaleidoswap/desktop-app" target="_blank" rel="noopener">GitHub</a><a href="https://docs.kaleidoswap.com/desktop-app/getting-started/introduction" target="_blank" rel="noopener">Docs</a><a href="https://docs.kaleidoswap.com/desktop-app/kaleidomind/chat" target="_blank" rel="noopener">Chat docs</a></div>
         </div>
       </article>
 
-      <article class="wallet">
-        <div class="shot empty">Rate screenshot coming soon</div>
+      <article class="wallet" id="w-rate">
+        <div class="shot phones"><img src="img/rate-home.jpg" alt="Rate home screen with BTC and Spark USD balances" width="560" height="1217" loading="lazy"><img src="img/rate-swap.jpg" alt="Rate swap screen quoting 1,000 sats to USDB with live provider quotes" width="560" height="1217" loading="lazy"></div>
         <div class="info">
           <div class="wallet-head">
             <span class="status open">Open source · fork it</span>
@@ -401,8 +324,8 @@ pnpm bundle-skills     <span class="c"># after adding skills/&lt;name&gt;/SKILL.
         </div>
       </article>
 
-      <article class="wallet">
-        <div class="shot"><img src="img/extension-dashboard.jpg" alt="KaleidoSwap browser extension dashboard with deposit, swap and withdraw actions" width="1280" height="800" loading="lazy"></div>
+      <article class="wallet" id="w-ext">
+        <div class="shot"><img class="tall" src="img/extension-wallet.jpg" alt="KaleidoSwap browser extension wallet holding BTC, USDT and XAUT on RGB, and USDB on Spark" width="640" height="1029" loading="lazy"></div>
         <div class="info">
           <div class="wallet-head">
             <span class="status beta">Closed beta · use, don't modify</span>
@@ -414,7 +337,7 @@ pnpm bundle-skills     <span class="c"># after adding skills/&lt;name&gt;/SKILL.
             <span class="chip">window.rgb</span><span class="chip">window.webln</span><span class="chip">RGB on-chain + Lightning</span><span class="chip">Spark</span><span class="chip">Arkade</span><span class="chip">Bark</span><span class="chip">Approval popups</span>
           </div>
           <ul>
-            <li><strong>dApp wallet:</strong> build against the <code class="i">@kaleidorg/webrgb</code> mock, then test end to end on <code class="i">localhost</code>.</li>
+            <li><strong>dApp wallet:</strong> build against the <a href="#libraries">webrgb</a> mock, then test end to end on <code class="i">localhost</code>.</li>
             <li><strong>Pair it with your agent:</strong> the AI prepares the action, the popup is where the user approves it.</li>
             <li><strong>Get a build:</strong> ask the KaleidoSwap team at the venue for a beta invite.</li>
           </ul>
@@ -423,138 +346,231 @@ pnpm bundle-skills     <span class="c"># after adding skills/&lt;name&gt;/SKILL.
 await rgb.enable();
 const info = await rgb.getInfo();</pre><button class="copy" type="button">Copy</button></div>
           </details>
-          <div class="links"><a href="https://docs.kaleidoswap.com/extensions/kaleidoswap-extension/dapp-connectivity" target="_blank" rel="noopener">dApp docs</a><a href="https://docs.kaleidoswap.com/extensions/kaleidoswap-extension/installation" target="_blank" rel="noopener">Installation</a><a href="https://kaleidoswap.github.io/webrgb/" target="_blank" rel="noopener">webrgb playground</a></div>
+          <div class="links"><a href="https://docs.kaleidoswap.com/extensions/introduction" target="_blank" rel="noopener">Docs</a><a href="https://docs.kaleidoswap.com/extensions/kaleidoswap-extension/dapp-connectivity" target="_blank" rel="noopener">dApp docs</a></div>
         </div>
       </article>
 
     </div>
   </section>
 
-  <section id="network" aria-labelledby="net-h">
-    <h2 id="net-h">Networks</h2>
-    <p class="sub">Our infrastructure runs on Mutinynet. Everything below is live and free to use with test funds.</p>
-
-    <div class="netcard">
-      <div class="netcard-head"><h3>Mutinynet</h3><span class="status open">Supported by KaleidoSwap</span></div>
-
-      <div class="services">
-        <div class="service">
-          <h4>RGB Lightning maker</h4>
-          <span class="host">api.signet.kaleidoswap.com</span>
-          <ul>
-            <li><strong>Buy Lightning channels</strong>, including channels that carry RGB assets.</li>
-            <li><strong>Swap over Lightning</strong>: atomic swaps BTC ↔ USDT / XAUT.</li>
-          </ul>
-          <p>Paired with the RGB faucet: get assets on-chain, open a channel, then receive and pay invoices.</p>
-        </div>
-        <div class="service">
-          <h4>On-chain swap maker</h4>
-          <span class="host">maker.signet.kaleidoswap.com</span>
-          <ul>
-            <li><strong>Submarine swaps</strong>: pay a Lightning invoice with on-chain BTC.</li>
-            <li><strong>Reverse swaps</strong>: pay over Lightning, receive on-chain.</li>
-          </ul>
-          <p>Useful to move funds in and out of Lightning without a channel of your own.</p>
-        </div>
-      </div>
-
-      <div class="utils">
-        <div class="util"><span>BTC faucet</span><a href="https://faucet.mutinynet.com" target="_blank" rel="noopener">faucet.mutinynet.com</a></div>
-        <div class="util"><span>RGB faucet</span><a href="https://faucet.mutinynet.kaleidoswap.com" target="_blank" rel="noopener">faucet.mutinynet.kaleidoswap.com</a></div>
-        <div class="util"><span>Explorer</span><a href="https://mutinynet.com" target="_blank" rel="noopener">mutinynet.com</a></div>
-        <div class="util"><span>RGB proxy</span><code>rpcs://proxy.iriswallet.com/0.2/json-rpc</code></div>
-      </div>
-
-      <div>
-        <h4>Why Mutinynet</h4>
-        <div class="why">
-          <div><strong>30-second blocks</strong><p>Channels open and swaps settle in minutes, not hours.</p></div>
-          <div><strong>Stable chain</strong><p>A signet: no surprise reorgs or block storms like testnet.</p></div>
-          <div><strong>Faucets that work</strong><p>BTC on demand, plus our RGB faucet for USDT and XAUT.</p></div>
-          <div><strong>Real counterparties</strong><p>Our makers, LSP and liquidity live here, so swaps work out of the box.</p></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="other">
-      <h3>Other networks</h3>
-      <p>The RGB Lightning Node and our tools also run on other networks, for example a local regtest for offline development or another signet. There you run your own node, faucet and counterparty: KaleidoSwap makers and faucets are only on Mutinynet.</p>
-    </div>
-  </section>
-
-  <section id="toolbox" aria-labelledby="tools-h">
-    <h2 id="tools-h">Toolbox</h2>
-    <p class="sub">Open source and pointed at Mutinynet by default. Grouped by what you are building.</p>
+  <section id="libraries" aria-labelledby="lib-h">
+    <div class="sec-head"><h2 id="lib-h">RGB libraries</h2><a class="doc" href="https://docs.kaleidoswap.com/sdk/introduction" target="_blank" rel="noopener">SDK docs ↗</a></div>
+    <p class="sub">Build your own RGB wallet or app. Pick by where your keys live: in your app (rgb-lib), in a node (RGB Lightning Node), or in the user's wallet (webrgb).</p>
 
     <div class="group">
-      <div class="group-title"><h3>Connect an AI</h3><span>Give a model access to a node.</span></div>
+      <div class="group-title"><h3>Wallet core</h3><span>Hold and move RGB assets yourself.</span></div>
       <div class="tools">
         <article class="tool lead">
-          <div class="tool-head"><h3>kaleido-mcp</h3><span class="ver">npm · 0.3.1</span></div>
-          <p>MCP server with ~86 tools: RGB Lightning Node (balances, invoices, sends, issuance, UTXOs, channels), KaleidoSwap quotes and swaps, LSP channels, paid APIs over Lightning, market data.</p>
-          <div class="code"><pre>npx -y kaleido-mcp</pre><button class="copy" type="button">Copy</button></div>
-          <div class="links"><a href="https://github.com/kaleidoswap/kaleido-mcp" target="_blank" rel="noopener">GitHub</a><a href="https://github.com/kaleidoswap/kaleido-mcp/blob/main/docs/TOOLS.md" target="_blank" rel="noopener">Tool reference</a></div>
+          <div class="tool-head"><h3>rgb-lib</h3><span class="ver">Rust · bindings</span></div>
+          <p>The library behind most RGB wallets. Issue, receive and send RGB assets on-chain without dealing with Bitcoin or RGB internals. Works offline and watch-only.</p>
+          <p class="use"><b>Use it for</b> an on-chain RGB wallet inside your own app.</p>
+          <div class="code"><pre>npm i rgb-lib              <span class="c"># Node.js bindings</span>
+pip install rgb-lib        <span class="c"># Python</span></pre><button class="copy" type="button">Copy</button></div>
+          <div class="links"><a href="https://github.com/RGB-Tools/rgb-lib" target="_blank" rel="noopener">GitHub</a><a href="https://github.com/RGB-Tools/rgb-lib-nodejs" target="_blank" rel="noopener">Node.js</a><a href="https://github.com/RGB-Tools/rgb-lib/blob/master/bindings/README.md" target="_blank" rel="noopener">Kotlin, Swift, Python, C</a></div>
         </article>
         <article class="tool">
-          <div class="tool-head"><h3>Claude Code plugin</h3><span class="ver">14 skills</span></div>
-          <p>Installs the KaleidoMind skills (RGB node, trading, LSP channels, DCA, paid data…) and starts kaleido-mcp. Fastest way to poke at a node from your editor.</p>
-          <div class="code"><pre>/plugin marketplace add kaleidoswap/kaleido-mind
-/plugin install kaleido-mind@kaleidoswap</pre><button class="copy" type="button">Copy</button></div>
-          <div class="links"><a href="https://docs.kaleidoswap.com/ai-tools/skills" target="_blank" rel="noopener">Skills docs</a></div>
+          <div class="tool-head"><h3>rgb-lib-wasm</h3><span class="ver">npm · beta</span></div>
+          <p>rgb-lib compiled for the browser: IndexedDB storage, Esplora over HTTP, encrypted backups.</p>
+          <p class="use"><b>Use it for</b> an RGB wallet that runs entirely in a web page or extension.</p>
+          <div class="code"><pre>npm i @utexo/rgb-lib-wasm</pre><button class="copy" type="button">Copy</button></div>
+          <div class="links"><a href="https://github.com/UTEXO-Protocol/rgb-lib-wasm" target="_blank" rel="noopener">GitHub</a></div>
         </article>
-      </div>
-    </div>
-
-    <div class="group">
-      <div class="group-title"><h3>Run the agent locally</h3><span>On-device models with QVAC.</span></div>
-      <div class="tools">
         <article class="tool lead">
-          <div class="tool-head"><h3>@kaleidorg/mind</h3><span class="ver">npm · 0.7.0</span></div>
-          <p>Agent engine for wallets: runs QVAC models on Node, Bare or React Native, uses skills and MCP tools, and confirms before every spend.</p>
-          <div class="code"><pre>npm i @kaleidorg/mind @qvac/sdk</pre><button class="copy" type="button">Copy</button></div>
-          <div class="links"><a href="https://github.com/kaleidoswap/kaleido-mind" target="_blank" rel="noopener">GitHub</a><a href="https://github.com/kaleidoswap/kaleido-mind/tree/main/examples" target="_blank" rel="noopener">Examples</a><a href="https://docs.kaleidoswap.com/ai-tools/kaleido-mind" target="_blank" rel="noopener">Docs</a></div>
-        </article>
-        <article class="tool">
-          <div class="tool-head"><h3>KaleidoAgent</h3><span class="ver">reference app</span></div>
-          <p>A complete autonomous agent: portfolio rebalancing, DCA, channel health and a web dashboard. Read it for patterns or fork it.</p>
-          <div class="links"><a href="https://github.com/kaleidoswap/kaleido-agent" target="_blank" rel="noopener">GitHub</a></div>
+          <div class="tool-head"><h3>RGB Lightning Node</h3><span class="ver">Rust · Docker · REST</span></div>
+          <p>A Lightning node with RGB built in, controlled over a REST API. Holds RGB on-chain and in channels, pays and receives RGB invoices, runs atomic swaps.</p>
+          <p class="use"><b>Use it for</b> RGB over Lightning, swaps, and as the backend for agents.</p>
+          <div class="code"><pre>curl -fsSL https://raw.githubusercontent.com/kaleidoswap/kaleido-cli/master/install.sh | sh
+kaleido setup              <span class="c"># create + start a node on Mutinynet</span></pre><button class="copy" type="button">Copy</button></div>
+          <div class="links"><a href="https://github.com/RGB-Tools/rgb-lightning-node" target="_blank" rel="noopener">GitHub</a><a href="https://github.com/kaleidoswap/kaleido-cli" target="_blank" rel="noopener">kaleido CLI</a><a href="https://docs.kaleidoswap.com/cli/introduction" target="_blank" rel="noopener">CLI docs</a></div>
         </article>
       </div>
     </div>
 
     <div class="group">
-      <div class="group-title"><h3>Build apps</h3><span>Code against the node, the DEX or a browser wallet.</span></div>
+      <div class="group-title"><h3>Apps and dApps</h3><span>Talk to a node, the DEX or a browser wallet.</span></div>
       <div class="tools">
         <article class="tool">
           <div class="tool-head"><h3>kaleido-sdk</h3><span class="ver">npm · PyPI</span></div>
-          <p>Typed clients for the KaleidoSwap maker (assets, pairs, quotes, swaps, LSP) and the RGB Lightning Node API.</p>
-          <div class="code"><pre>npm i kaleido-sdk        <span class="c"># or</span>
-pip install kaleido-sdk</pre><button class="copy" type="button">Copy</button></div>
-          <div class="links"><a href="https://github.com/kaleidoswap/kaleido-sdk" target="_blank" rel="noopener">GitHub</a></div>
+          <p>Typed clients for the KaleidoSwap maker (assets, quotes, swaps, channel orders) and the RGB Lightning Node API.</p>
+          <div class="code"><pre>npm i kaleido-sdk          <span class="c"># or: pip install kaleido-sdk</span></pre><button class="copy" type="button">Copy</button></div>
+          <div class="links"><a href="https://github.com/kaleidoswap/kaleido-sdk" target="_blank" rel="noopener">GitHub</a><a href="https://docs.kaleidoswap.com/sdk/introduction" target="_blank" rel="noopener">Docs</a><a href="https://docs.kaleidoswap.com/api-reference/introduction" target="_blank" rel="noopener">Maker API</a></div>
         </article>
         <article class="tool">
           <div class="tool-head"><h3>webrgb</h3><span class="ver">npm · 0.3.0</span></div>
-          <p>The <code class="i">window.rgb</code> browser provider spec, with a mock wallet and a conformance suite. Build a web app without running a node.</p>
+          <p>The <code class="i">window.rgb</code> provider spec, with a mock wallet and a conformance suite. Build a web app without running a node, then plug in the extension.</p>
           <div class="code"><pre>npm i @kaleidorg/webrgb</pre><button class="copy" type="button">Copy</button></div>
           <div class="links"><a href="https://kaleidoswap.github.io/webrgb/" target="_blank" rel="noopener">Playground</a><a href="https://github.com/kaleidoswap/webrgb" target="_blank" rel="noopener">GitHub</a></div>
         </article>
       </div>
     </div>
+  </section>
 
-    <div class="group">
-      <div class="group-title"><h3>Operate a node</h3><span>From the terminal.</span></div>
-      <div class="tools">
-        <article class="tool">
-          <div class="tool-head"><h3>kaleido CLI</h3><span class="ver">Python · Docker</span></div>
-          <p>Sets up RGB Lightning Nodes, wallets and channels, and trades on the DEX. Its <code class="i">--agent</code> mode prints JSON for scripts and agents.</p>
-          <div class="links"><a href="https://github.com/kaleidoswap/kaleido-cli" target="_blank" rel="noopener">GitHub</a></div>
-        </article>
+  <section id="ai" aria-labelledby="ai-h">
+    <div class="sec-head"><h2 id="ai-h">AI libraries</h2><a class="doc" href="https://docs.kaleidoswap.com/ai-tools/introduction" target="_blank" rel="noopener">AI tools docs ↗</a></div>
+    <p class="sub">Turn a wallet into something you can talk to. kaleido-mcp gives a model the tools; KaleidoMind runs the model on your device.</p>
+    <div class="tools">
+      <article class="tool lead">
+        <div class="tool-head"><h3>kaleido-mcp</h3><span class="ver">npm · 0.3.1</span></div>
+        <p>An MCP server: exposes your RGB Lightning Node and the KaleidoSwap DEX as ~86 tools any AI app can call (balances, invoices, sends, issuance, channels, quotes, swaps).</p>
+        <p class="use"><b>Use it for</b> plugging a node into Claude, Cursor or your own agent.</p>
+        <div class="code"><pre>npx -y kaleido-mcp</pre><button class="copy" type="button">Copy</button></div>
+        <div class="links"><a href="https://github.com/kaleidoswap/kaleido-mcp" target="_blank" rel="noopener">GitHub</a><a href="https://github.com/kaleidoswap/kaleido-mcp/blob/main/docs/TOOLS.md" target="_blank" rel="noopener">Tools</a><a href="https://docs.kaleidoswap.com/ai-tools/mcp-servers" target="_blank" rel="noopener">Docs</a></div>
+      </article>
+      <article class="tool lead">
+        <div class="tool-head"><h3>@kaleidorg/mind</h3><span class="ver">npm · 0.7.0</span></div>
+        <p>KaleidoMind, the agent engine in our wallets. Runs QVAC models on-device (Node, Bare, React Native), uses MCP tools and skills, and pauses before every spend.</p>
+        <p class="use"><b>Use it for</b> a fully local agent: chat, voice, or autonomous.</p>
+        <div class="code"><pre>npm i @kaleidorg/mind @qvac/sdk</pre><button class="copy" type="button">Copy</button></div>
+        <div class="links"><a href="https://github.com/kaleidoswap/kaleido-mind" target="_blank" rel="noopener">GitHub</a><a href="https://github.com/kaleidoswap/kaleido-mind/tree/main/examples" target="_blank" rel="noopener">Examples</a><a href="https://docs.kaleidoswap.com/ai-tools/kaleido-mind" target="_blank" rel="noopener">Docs</a></div>
+      </article>
+      <article class="tool">
+        <div class="tool-head"><h3>Claude Code plugin</h3><span class="ver">14 skills</span></div>
+        <p>Installs the KaleidoMind skills (RGB node, trading, channels, DCA, paid data…) and starts kaleido-mcp. Fastest way to poke at a node from your editor.</p>
+        <div class="code"><pre>/plugin marketplace add kaleidoswap/kaleido-mind
+/plugin install kaleido-mind@kaleidoswap</pre><button class="copy" type="button">Copy</button></div>
+        <div class="links"><a href="https://docs.kaleidoswap.com/ai-tools/skills" target="_blank" rel="noopener">Skills docs</a></div>
+      </article>
+      <article class="tool">
+        <div class="tool-head"><h3>KaleidoAgent</h3><span class="ver">reference app</span></div>
+        <p>A complete autonomous agent: portfolio rebalancing, DCA, channel health and a web dashboard. Read it for patterns or fork it.</p>
+        <div class="links"><a href="https://github.com/kaleidoswap/kaleido-agent" target="_blank" rel="noopener">GitHub</a><a href="https://docs.kaleidoswap.com/ai-tools/kaleido-agent" target="_blank" rel="noopener">Docs</a></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="network" aria-labelledby="net-h">
+    <div class="sec-head"><h2 id="net-h">Network</h2><a class="doc" href="https://docs.kaleidoswap.com/api-reference/introduction" target="_blank" rel="noopener">Maker API docs ↗</a></div>
+    <p class="sub">Our infrastructure runs on Mutinynet. Everything below is live and free to use with test funds.</p>
+
+    <div class="netcard">
+      <div class="netcard-head">
+        <h3>Mutinynet</h3><span class="status open">Supported by KaleidoSwap</span>
+        <span class="assets"><img src="img/bitcoin.svg" alt="Bitcoin" width="26" height="26"><img src="img/lightning.png" alt="Lightning" width="26" height="26"><img src="img/rgb.svg" alt="RGB" width="26" height="26"></span>
       </div>
+
+      <div class="services">
+        <div class="service">
+          <div><span class="name"><span class="icons"><img class="ico" src="img/rgb.svg" alt=""><img class="ico" src="img/lightning.png" alt=""></span>RGB Lightning maker</span><span class="host">api.signet.kaleidoswap.com</span></div>
+          <p>Buy Lightning channels (including RGB asset channels) and swap BTC ↔ USDT / XAUT atomically over Lightning. <a href="https://docs.kaleidoswap.com/api-reference/rgb-lsps1-apis" target="_blank" rel="noopener">Channels</a> · <a href="https://docs.kaleidoswap.com/api-reference/swap-apis" target="_blank" rel="noopener">Swaps</a></p>
+        </div>
+        <div class="service">
+          <div><span class="name"><span class="icons"><img class="ico" src="img/bitcoin.svg" alt=""><img class="ico" src="img/lightning.png" alt=""></span>On-chain swap maker</span><span class="host">maker.signet.kaleidoswap.com</span></div>
+          <p>Submarine swaps (on-chain → Lightning) and reverse swaps (Lightning → on-chain), to move funds without a channel of your own.</p>
+        </div>
+      </div>
+
+      <div class="utils">
+        <div class="util"><span class="lbl"><img src="img/bitcoin.svg" alt="">BTC faucet</span><a href="https://faucet.mutinynet.com" target="_blank" rel="noopener">faucet.mutinynet.com</a></div>
+        <div class="util"><span class="lbl"><img src="img/rgb.svg" alt="">RGB faucet</span><a href="https://faucet.mutinynet.kaleidoswap.com" target="_blank" rel="noopener">faucet.mutinynet.kaleidoswap.com</a><small>USDT, XAUT · sign in with GitHub</small></div>
+        <div class="util"><span class="lbl"><img src="img/bitcoin.svg" alt="">Explorer</span><a href="https://mutinynet.com" target="_blank" rel="noopener">mutinynet.com</a></div>
+        <div class="util"><span class="lbl"><img src="img/rgb.svg" alt="">RGB proxy</span><code>rpcs://proxy.kaleidoswap.com/json-rpc</code><small>or Iris: <code>rpcs://proxy.iriswallet.com/0.2/json-rpc</code></small></div>
+      </div>
+
+      <div class="why" aria-label="Why Mutinynet">
+        <span><b>30-second blocks</b>: channels and swaps settle in minutes</span>
+        <span><b>Stable signet</b>: no testnet reorgs or block storms</span>
+        <span><b>Working faucets</b> for BTC and RGB</span>
+        <span><b>Live makers</b>: swaps work out of the box</span>
+      </div>
+    </div>
+    <p class="other" style="margin-top:14px"><strong>Other networks:</strong> the node and libraries also run on regtest or other signets, but there you bring your own faucet and counterparty. KaleidoSwap makers and faucets live only on Mutinynet.</p>
+  </section>
+
+  <section id="example" aria-labelledby="start-h">
+    <div class="sec-head"><h2 id="start-h">Example: an RGB agent end to end</h2><a class="doc" href="https://docs.kaleidoswap.com/ai-tools/build-local-rgb-agent" target="_blank" rel="noopener">15-minute tutorial ↗</a></div>
+    <p class="sub">Putting the pieces together: a node, test funds, kaleido-mcp, and a local model. Open the steps you need. No Docker? Jump to step 4 and use the mock node.</p>
+    <div class="steps">
+
+      <details class="step">
+        <summary><span class="num">1</span><span class="sum-text"><h3>Get a node</h3><span>The kaleido CLI, or the desktop wallet.</span></span><span class="chev" aria-hidden="true">›</span></summary>
+        <div class="step-body">
+          <p>Run an <a href="#libraries">RGB Lightning Node</a> with the kaleido CLI (needs Docker), or use <a href="#w-desktop">KaleidoSwap Desktop</a>, which runs one for you.</p>
+          <div class="code"><pre>curl -fsSL https://raw.githubusercontent.com/kaleidoswap/kaleido-cli/master/install.sh | sh
+kaleido setup                      <span class="c"># create + start one node</span>
+kaleido wallet balance             <span class="c"># check it answers</span></pre><button class="copy" type="button">Copy</button></div>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary><span class="num">2</span><span class="sum-text"><h3>Fund it</h3><span>BTC, colorable UTXOs, RGB assets, a channel.</span></span><span class="chev" aria-hidden="true">›</span></summary>
+        <div class="step-body">
+          <ul>
+            <li><strong>BTC</strong> from the <a href="https://faucet.mutinynet.com" target="_blank" rel="noopener">Mutinynet faucet</a>.</li>
+            <li><strong>Colorable UTXOs</strong> before receiving or issuing RGB (<code class="i">rln_create_utxos</code>, or ask the agent).</li>
+            <li><strong>USDT and XAUT</strong> from the <a href="https://faucet.mutinynet.kaleidoswap.com" target="_blank" rel="noopener">RGB faucet</a>.</li>
+            <li><strong>A channel</strong> from the <a href="#network">RGB Lightning maker</a>, to pay and receive invoices.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary><span class="num">3</span><span class="sum-text"><h3>Connect an AI with kaleido-mcp</h3><span>Claude Code, Claude Desktop or Cursor.</span></span><span class="chev" aria-hidden="true">›</span></summary>
+        <div class="step-body">
+          <p><strong>MCP</strong> is the standard way an AI app discovers and calls tools. You register kaleido-mcp once; the AI app starts it for you and you just chat.</p>
+          <div class="opt">
+            <h5>Claude Code</h5>
+            <div class="code"><pre>claude mcp add kaleido -e RLN_NODE_URL=http://localhost:3001 -- npx -y kaleido-mcp</pre><button class="copy" type="button">Copy</button></div>
+          </div>
+          <div class="opt">
+            <h5>Claude Desktop, Cursor or any MCP client</h5>
+            <p>Add to the client's MCP config (Claude Desktop: Settings → Developer → Edit Config), then restart it.</p>
+            <div class="code"><pre>{
+  "mcpServers": {
+    "kaleido": {
+      "command": "npx",
+      "args": ["-y", "kaleido-mcp"],
+      "env": { "RLN_NODE_URL": "http://localhost:3001" }
+    }
+  }
+}</pre><button class="copy" type="button">Copy</button></div>
+          </div>
+          <p><strong>Check it:</strong> ask <em>"What's my node info?"</em>. You should see a call to <code class="i">rln_get_node_info</code> and your node's pubkey. <code class="i">RLN_NODE_URL</code> is your node's API address.</p>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary><span class="num">4</span><span class="sum-text"><h3>Go local with KaleidoMind</h3><span>Same agent, model on your machine.</span></span><span class="chev" aria-hidden="true">›</span></summary>
+        <div class="step-body">
+          <p>The <code class="i">rgb-agent</code> example runs a QVAC model, connects it to kaleido-mcp, loads the RGB node skill and asks three questions: balances, a 10 USDT invoice, then a 5 USDT send (only with <code class="i">RECIPIENT_INVOICE</code> set). Edit <code class="i">steps</code> in <code class="i">src/index.ts</code> to ask your own.</p>
+          <div class="code"><pre>git clone https://github.com/kaleidoswap/kaleido-mind && cd kaleido-mind
+corepack enable && pnpm install && pnpm build
+cd examples/rgb-agent
+pnpm start:mock     <span class="c"># fake node, real local model (downloaded once)</span>
+pnpm start          <span class="c"># your node via kaleido-mcp</span></pre><button class="copy" type="button">Copy</button></div>
+          <div class="code"><pre><span class="u">&gt; Which RGB assets do I hold, and what are the balances?</span>
+  <span class="c">tool rln_list_assets {}</span>
+You hold 1,000 USDT and 2 XAUT.
+
+<span class="u">&gt; Create an RGB invoice so I can receive 10 USDT.</span>
+  <span class="c">tool rln_create_rgb_invoice {"asset":"USDT","amount":10}</span>
+Here is your invoice: rgb:~/~/~/sig/…/10/utxob:…
+
+<span class="u">&gt; Send 5 USDT to this RGB invoice: rgb:…</span>
+  <span class="c">tool rln_send_asset {"asset":"USDT","amount":5,"to":"rgb:…"}</span>
+  <span class="t">Send 5 USDT to rgb:…. Confirm? [y/N]</span></pre></div>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary><span class="num">5</span><span class="sum-text"><h3>Talk to it</h3><span>Example requests and what comes back.</span></span><span class="chev" aria-hidden="true">›</span></summary>
+        <div class="step-body">
+          <p>Same in an MCP client, the KaleidoMind example, or the AI chat in our wallets. Short, specific requests work best.</p>
+          <div class="talk">
+            <div class="turn"><div class="ask">Which RGB assets do I hold, and what are the balances?</div><div class="ans"><span class="call">rln_list_assets</span>A list like "USDT: 100 spendable, XAUT: 0.5", each with its asset id.</div></div>
+            <div class="turn"><div class="ask">Create 3 colorable UTXOs so I can receive RGB.</div><div class="ans"><span class="call">rln_create_utxos</span><span class="gate">Asks you to confirm (it spends on-chain fees),</span> then reports the UTXOs created.</div></div>
+            <div class="turn"><div class="ask">Issue a token named Hackathon Coin, ticker HCK, supply 1,000,000.</div><div class="ans"><span class="call">rln_issue_asset</span><span class="gate">Asks you to confirm,</span> then returns the new asset id (<code class="i">rgb:…</code>).</div></div>
+            <div class="turn"><div class="ask">Create an RGB invoice to receive 10 HCK.</div><div class="ans"><span class="call">rln_create_rgb_invoice</span>An <code class="i">rgb:…</code> invoice string to share with the payer.</div></div>
+            <div class="turn"><div class="ask">Quote 0.0005 BTC to USDT on KaleidoSwap.</div><div class="ans"><span class="call">kaleidoswap_get_quote</span>The USDT you would receive, the fee and how long the quote is valid.</div></div>
+            <div class="turn"><div class="ask">Pay this Lightning invoice: lntbs…</div><div class="ans"><span class="call">rln_pay_invoice</span><span class="gate">Reads back the invoice and waits for your yes,</span> then reports the payment status.</div></div>
+          </div>
+        </div>
+      </details>
+
     </div>
   </section>
 
   <section id="models" aria-labelledby="models-h">
-    <h2 id="models-h">Which model?</h2>
+    <h2 id="models-h" style="margin-bottom:16px">Which model?</h2>
     <div class="models-sum">
       <ul>
         <li><strong>Start with Qwen3.5 2B through QVAC.</strong> In our own informal runs it handled balances, issuance, invoices and quotes, and is fast enough for a live demo.</li>
@@ -569,24 +585,25 @@ pip install kaleido-sdk</pre><button class="copy" type="button">Copy</button></d
   </section>
 
   <section id="rules" aria-labelledby="rules-h">
-    <h2 id="rules-h">Good to know</h2>
+    <h2 id="rules-h" style="margin-bottom:16px">Good to know</h2>
     <div class="two">
       <ul class="rules">
         <li><span><strong>Test funds only.</strong> Everything runs on Mutinynet. Never put a mainnet seed in an agent config.</span></li>
         <li><span><strong>Keep the confirmation gate on.</strong> Tools that move funds are flagged; KaleidoMind and the wallets ask before running them.</span></li>
-        <li><span><strong>Colorable UTXOs first.</strong> If an RGB invoice or issuance fails, ask the agent to create UTXOs.</span></li>
-        <li><span><strong>Use asset ids, not tickers.</strong> Invoices and sends take the RGB asset id; have the agent list assets first.</span></li>
-        <li><span><strong>Trust tool output, not the model.</strong> Small models can invent values. Only show invoices, addresses and ids that came back from a tool call.</span></li>
+        <li><span><strong>Colorable UTXOs first.</strong> If an RGB invoice or issuance fails, create UTXOs.</span></li>
+        <li><span><strong>One wallet, one device.</strong> Never load the same rgb-lib or node mnemonic in two places: RGB assets can be lost.</span></li>
+        <li><span><strong>Use asset ids, not tickers.</strong> Invoices and sends take the RGB asset id; list assets first.</span></li>
+        <li><span><strong>Trust tool output, not the model.</strong> Only show invoices, addresses and ids that came back from a tool call.</span></li>
       </ul>
       <div class="note">
         <strong>Stuck?</strong>
-        <p>Run the agent in mock mode to tell model problems from node problems, or try a bigger model. See the <a href="https://docs.kaleidoswap.com/ai-tools/getting-started" target="_blank" rel="noopener">AI tools docs</a> and the <a href="https://docs.kaleidoswap.com/ai-tools/build-local-rgb-agent" target="_blank" rel="noopener">15-minute tutorial</a>, open an issue on the repo, or find the KaleidoSwap team at the venue.</p>
+        <p>Run the agent in mock mode to tell model problems from node problems, or try a bigger model. Check the <a href="https://docs.kaleidoswap.com" target="_blank" rel="noopener">KaleidoSwap docs</a> (<a href="https://docs.kaleidoswap.com/ai-tools/getting-started" target="_blank" rel="noopener">AI tools</a>, <a href="https://docs.kaleidoswap.com/sdk/introduction" target="_blank" rel="noopener">SDK</a>, <a href="https://docs.kaleidoswap.com/cli/introduction" target="_blank" rel="noopener">CLI</a>), open an issue on the repo, or find the KaleidoSwap team at the venue.</p>
       </div>
     </div>
   </section>
 
   <footer>
-    <span>KaleidoSwap · open source tooling for RGB and Lightning</span>
+    <a class="brand" href="https://kaleidoswap.com" target="_blank" rel="noopener"><img src="img/logo.svg" alt="" width="22" height="22">KaleidoSwap</a>
     <span><a href="https://docs.kaleidoswap.com" target="_blank" rel="noopener">docs.kaleidoswap.com</a> · <a href="https://github.com/kaleidoswap" target="_blank" rel="noopener">github.com/kaleidoswap</a></span>
   </footer>
 </div>

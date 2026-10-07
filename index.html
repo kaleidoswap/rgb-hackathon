@@ -410,7 +410,7 @@ kaleido setup              <span class="c"># create + start a node on Mutinynet<
     <p class="sub">Turn a wallet into something you can talk to. kaleido-mcp gives a model the tools; KaleidoMind runs the model on your device.</p>
     <div class="tools">
       <article class="tool lead">
-        <div class="tool-head"><h3>kaleido-mcp</h3><span class="ver">npm · 0.4.1</span></div>
+        <div class="tool-head"><h3>kaleido-mcp</h3><span class="ver">npm · 0.4.2</span></div>
         <p>An MCP server: exposes your RGB Lightning Node and the KaleidoSwap DEX as ~90 tools any AI app can call (balances, invoices, sends, issuance, channels, quotes, swaps, submarine swaps).</p>
         <p class="use"><b>Use it for</b> plugging a node into Claude, Cursor or your own agent.</p>
         <div class="code"><pre>npx -y kaleido-mcp</pre><button class="copy" type="button">Copy</button></div>
@@ -513,7 +513,7 @@ kaleido wallet balance             <span class="c"># check it answers</span></pr
           <p>Swaps settle over Lightning, so your node needs a channel with the KaleidoSwap LSP. Buy one after funding: the LSP opens it to you, optionally with USDT or XAUT on its side, and you pay a fee on-chain.</p>
           <ul>
             <li><strong>Size and cost:</strong> 50k to 1M sat, with up to 1,000 USDT or XAUT per channel. Tested on signet: a 54k-sat channel with 10 USDT inbound cost 7,281 sat in total and was usable about 4 minutes after payment, so fund at least ~10k sat first.</li>
-            <li><strong>Step by step (kaleido-mcp tools):</strong> <code class="i">kaleidoswap_lsp_get_info</code> → <code class="i">rln_connect_peer</code> to the LSP → <code class="i">kaleidoswap_lsp_estimate_fees</code> → <code class="i">kaleidoswap_lsp_create_order</code> (with your <code class="i">client_pubkey</code> from <code class="i">rln_get_node_info</code>) → <code class="i">rln_send_btc</code> of the order's <strong>total</strong> to its on-chain address → <code class="i">rln_list_channels</code> until it is usable. Pay the order total, not only the fee.</li>
+            <li><strong>Step by step (kaleido-mcp tools):</strong> <code class="i">kaleidoswap_lsp_get_info</code> → <code class="i">rln_connect_peer</code> to the LSP → <code class="i">kaleidoswap_lsp_estimate_fees</code> → <code class="i">kaleidoswap_lsp_create_order</code> (with your <code class="i">client_pubkey</code> from <code class="i">rln_get_node_info</code>) → <code class="i">rln_send_btc</code> of the order's <code class="i">amount_due_sat</code> to <code class="i">payment.onchain.address</code> → <code class="i">rln_list_channels</code> until it is usable. Pay the order total, not only the fee.</li>
             <li><strong>With an agent:</strong> ask <em>"I want to swap BTC for USDT but I have no channel. Buy me a channel from the KaleidoSwap LSP with 10 USDT inbound."</em> It stops for your confirmation before paying.</li>
             <li><strong>In KaleidoSwap Desktop:</strong> Channels → Order New Channel.</li>
             <li><strong>Swap limits per trade:</strong> 0.000001 to 0.01 BTC, 0.5 to 1,000 USDT or XAUT. Allow a few blocks for the channel to open before you swap.</li>

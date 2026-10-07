@@ -512,8 +512,9 @@ kaleido wallet balance             <span class="c"># check it answers</span></pr
         <div class="step-body">
           <p>Swaps settle over Lightning, so your node needs a channel with the KaleidoSwap LSP. Buy one after funding: the LSP opens it to you, optionally with USDT or XAUT on its side, and you pay a fee on-chain.</p>
           <ul>
-            <li><strong>Size:</strong> 50k to 1M sat, with up to 1,000 USDT or XAUT per channel. A 200k-sat channel costs about 3,400 sat in fees.</li>
-            <li><strong>With an agent:</strong> ask <em>"Buy a channel from the KaleidoSwap LSP preloaded with 10 USDT"</em>. It runs <code class="i">kaleidoswap_lsp_get_info</code>, <code class="i">kaleidoswap_lsp_quote_asset_channel</code>, then <code class="i">kaleidoswap_lsp_create_asset_channel</code>. Then pay the fee to the address the order returns.</li>
+            <li><strong>Size and cost:</strong> 50k to 1M sat, with up to 1,000 USDT or XAUT per channel. Tested on signet: a 54k-sat channel with 10 USDT inbound cost 7,281 sat in total and was usable about 4 minutes after payment, so fund at least ~10k sat first.</li>
+            <li><strong>Step by step (kaleido-mcp tools):</strong> <code class="i">kaleidoswap_lsp_get_info</code> → <code class="i">rln_connect_peer</code> to the LSP → <code class="i">kaleidoswap_lsp_estimate_fees</code> → <code class="i">kaleidoswap_lsp_create_order</code> (with your <code class="i">client_pubkey</code> from <code class="i">rln_get_node_info</code>) → <code class="i">rln_send_btc</code> of the order's <strong>total</strong> to its on-chain address → <code class="i">rln_list_channels</code> until it is usable. Pay the order total, not only the fee.</li>
+            <li><strong>With an agent:</strong> ask <em>"I want to swap BTC for USDT but I have no channel. Buy me a channel from the KaleidoSwap LSP with 10 USDT inbound."</em> It stops for your confirmation before paying.</li>
             <li><strong>In KaleidoSwap Desktop:</strong> Channels → Order New Channel.</li>
             <li><strong>Swap limits per trade:</strong> 0.000001 to 0.01 BTC, 0.5 to 1,000 USDT or XAUT. Allow a few blocks for the channel to open before you swap.</li>
           </ul>

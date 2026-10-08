@@ -379,7 +379,7 @@ pip install rgb-lib        <span class="c"># Python</span></pre><button class="c
           <div class="tool-head"><h3>RGB Lightning Node</h3><span class="ver">Rust · Docker · REST</span></div>
           <p>A Lightning node with RGB built in, controlled over a REST API. Holds RGB on-chain and in channels, pays and receives RGB invoices, runs atomic swaps.</p>
           <p class="use"><b>Use it for</b> RGB over Lightning, swaps, and as the backend for agents.</p>
-          <div class="code"><pre>curl -fsSL https://raw.githubusercontent.com/kaleidoswap/kaleido-cli/master/install.sh | sh
+          <div class="code"><pre>pipx install kaleido-cli   <span class="c"># or: pip install kaleido-cli</span>
 kaleido setup              <span class="c"># create + start a node on Mutinynet</span></pre><button class="copy" type="button">Copy</button></div>
           <div class="links"><a href="https://github.com/RGB-Tools/rgb-lightning-node" target="_blank" rel="noopener">GitHub</a><a href="https://github.com/kaleidoswap/kaleido-cli" target="_blank" rel="noopener">kaleido CLI</a><a href="https://docs.kaleidoswap.com/cli/introduction" target="_blank" rel="noopener">CLI docs</a></div>
         </article>
@@ -486,7 +486,7 @@ npm i @kaleidorg/mind @qvac/sdk       <span class="c"># or add it to your app</s
         <summary><span class="num">1</span><span class="sum-text"><h3>Get a node</h3><span>The kaleido CLI, or the desktop wallet.</span></span><span class="chev" aria-hidden="true">›</span></summary>
         <div class="step-body">
           <p>Run an <a href="#libraries">RGB Lightning Node</a> with the kaleido CLI (needs Docker and Python 3.11+), or use <a href="#w-desktop">KaleidoSwap Desktop</a>, which runs one for you.</p>
-          <div class="code"><pre>curl -fsSL https://raw.githubusercontent.com/kaleidoswap/kaleido-cli/master/install.sh | sh
+          <div class="code"><pre>pipx install kaleido-cli           <span class="c"># or: pip install kaleido-cli</span>
 export PATH="$HOME/.local/bin:$PATH"   <span class="c"># if kaleido is not found</span>
 kaleido setup                      <span class="c"># create + start one node</span>
 kaleido node init                  <span class="c"># once: set a password, write down the mnemonic</span>
